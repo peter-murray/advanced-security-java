@@ -31,15 +31,17 @@ jobs:
             ${{ runner.os }}-maven-
       
       - name: Compile
-        if: ${{ matrix.language }} == "java"
+        if: ${{ matrix.language }} == java
         run: mvn -B compile
         
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
+        with:
+          output: ${{ github.workspace }}/codeql-results
         
       - name: Save Sarif Files
         uses: actions/upload-artifact@v2
         with:
           name: sarif-results
           path: |
-            ../results/*.sarif
+            ${{ github.workspace }}/codeql-results/*.sarif
