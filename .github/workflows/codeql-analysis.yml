@@ -30,8 +30,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v1
+      - name: Compile
+        if: matrix.language == "java"
+        run: mvn -B compile
         
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
+        
+      - name: Save Sarif Files
+        uses: actions/upload-artifact@v2
+        with:
+          name: sarif-results
+          path: |
+            ../results/*.sarif
