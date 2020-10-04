@@ -17,11 +17,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
     
-    
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:
           languages: ${{ matrix.language }}
+      
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
       
       - name: Autobuild
         uses: github/codeql-action/autobuild@v1
